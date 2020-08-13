@@ -80,13 +80,13 @@ module Classmate
         end
 
         def encrypt(params)
-          encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}"[0..31]) #should be 32
+          encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}"[0..31])
 
           encryptor.encrypt_and_sign(params)
         end
 
         def decrypt(encrypted_params)
-          encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}")
+          encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}"[0..31])
 
           encryptor.decrypt_and_verify(encrypted_params)
         rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature
