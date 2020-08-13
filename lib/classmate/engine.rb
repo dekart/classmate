@@ -1,7 +1,7 @@
 module Classmate
   class Engine < ::Rails::Engine
     initializer "classmate.middleware" do |app|
-      app.middleware.insert_after(ActionDispatch::ParamsParser, Classmate::Middleware)
+      app.middleware.use(Classmate::Middleware)
     end
 
     initializer "classmate.controller_extension" do
