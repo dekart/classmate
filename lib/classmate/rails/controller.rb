@@ -12,7 +12,7 @@ module Classmate
           include Classmate::Rails::Controller::Redirects
 
           # Fix cookie permission issue in IE
-          before_filter :normal_cookies_for_ie_in_iframes!
+          # before_action :normal_cookies_for_ie_in_iframes!
 
           helper_method(:classmate, :classmate_params, :cm_signed_params, :current_classmate_user,
             :params_without_classmate_data, :init_js_params, :cm_canvas?
@@ -81,15 +81,15 @@ module Classmate
 
         def encrypt(params)
           encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}")
-          
+
           encryptor.encrypt_and_sign(params)
         end
 
         def decrypt(encrypted_params)
           encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}")
-          
+
           encryptor.decrypt_and_verify(encrypted_params)
-        rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature 
+        rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature
           nil
         end
     end
