@@ -74,7 +74,9 @@ module Classmate
         end
 
         def calculate_signature(params)
-          param_string = params.except(:sig, :resig).sort.map{|key, value| "#{key}=#{value}"}.join
+          params = params.clone.permit!.to_hash
+
+          param_string = params.except(:sig, :resig).permit!.to_hash.sort.map{|key, value| "#{key}=#{value}"}.join
 
           secret_key = params[:session_key] ? session_secret_key : Classmate::Config.default.secret_key
 

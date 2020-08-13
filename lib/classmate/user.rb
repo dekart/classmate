@@ -26,8 +26,8 @@ module Classmate
       end
 
       def signature_valid?(config, params)
-        param_string = params.except('sig').sort.map{|key, value| "#{key}=#{value}"}.join
-          
+        param_string = params.except('sig').permit!.to_hash.sort.map{|key, value| "#{key}=#{value}"}.join
+
         params['sig'] == Digest::MD5.hexdigest(param_string + config.secret_key)
       end
     end

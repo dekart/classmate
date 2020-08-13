@@ -16,7 +16,7 @@ module Classmate
           extra_js = capture(&block) if block_given?
 
           init_js = <<-JAVASCRIPT
-            FAPI.init('#{ options[:api_server] }', '#{ options[:apiconnection] }',
+            FAPI.init('#{ options["api_server"] }', '#{ options["apiconnection"] }',
               function() {
                 #{extra_js}
               },
@@ -26,7 +26,7 @@ module Classmate
             );
           JAVASCRIPT
 
-          js_url = "#{options[:api_server]}js/fapi5.js"
+          js_url = "#{options["api_server"]}js/fapi5.js"
 
           js = <<-CODE
             <script src="#{ js_url }" type="text/javascript"></script>

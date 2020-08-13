@@ -42,7 +42,7 @@ module Classmate
 
       # A hash of params passed to this action, excluding secure information passed by Moymir
       def params_without_classmate_data
-        params.except(*(CLASSMATE_PARAM_NAMES + DEBUG_PARAMS))
+        params.clone.permit!.except(*(CLASSMATE_PARAM_NAMES + DEBUG_PARAMS))
       end
 
       # params coming directly from Odnoklassniki
@@ -62,7 +62,7 @@ module Classmate
       # FIXME params to initialize JS API - might be better to store in cookies
       def init_js_params
         if classmate_params['session_key'].present?
-          classmate_params.slice('api_server', 'apiconnection')
+          classmate_params.clone.permit!.to_hash.slice('api_server', 'apiconnection')
         else
           decrypt(cm_signed_params).try(:slice, 'api_server', 'apiconnection')
         end
