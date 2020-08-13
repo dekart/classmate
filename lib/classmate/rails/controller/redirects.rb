@@ -4,7 +4,8 @@ module Classmate
       module Redirects
         def self.included(base)
           base.class_eval do
-            alias_method_chain :redirect_to, :signed_params
+            alias_method :redirect_to_without_signed_params, :redirect_to
+            alias_method :redirect_to, :redirect_to_with_signed_params
           end
         end
 
@@ -13,7 +14,7 @@ module Classmate
         # Overrides ActionController::Base#redirect_to to pass signed_params in flash[]
         def redirect_to_with_signed_params(*args)
           flash[:signed_params] = cm_signed_params
-          
+
           redirect_to_without_signed_params(*args)
         end
 
@@ -23,7 +24,7 @@ module Classmate
           redirect_url = url_options.is_a?(String) ? url_options : url_for(url_options)
 
           ::Rails.logger.debug "Redirecting from IFRAME to #{ redirect_url }"
-          
+
           respond_to do |format|
             format.html do
               render(
@@ -31,7 +32,7 @@ module Classmate
                 :layout => false
               )
             end
-            
+
             format.js do
               render(
                 :text   => iframe_redirect_js_code(redirect_url),
@@ -61,7 +62,7 @@ module Classmate
             </head></html>
           }
         end
-        
+
         # Generates JavaScript code to redirect user
         #
         # @param target_url   An URL to redirect the user to
