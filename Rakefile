@@ -23,8 +23,6 @@ begin
     gem.homepage = "http://github.com/ahmadeeva-su/classmate"
     gem.authors = ["Svetlana Akhmadeeva"]
     gem.version = '0.5'
-
-    gem.add_dependency "ie_iframe_cookies", '~> 0.1.2'
   end
 
   Jeweler::GemcutterTasks.new

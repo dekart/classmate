@@ -19,7 +19,10 @@ module Classmate
       # This let us work both with params and HTTP headers in the same way. Very useful for AJAX.
       env['HTTP_SIGNED_PARAMS'] ||= request.POST['signed_params']
 
-      @app.call(env)
+      response, headers, body = @app.call(env)
+      headers['P3P'] = %{CP="NOI DSP COR NID ADMa OPTa OUR NOR"}
+
+      [response, headers, body]
     end
   end
 end

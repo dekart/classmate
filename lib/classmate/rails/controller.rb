@@ -11,9 +11,6 @@ module Classmate
           include Classmate::Rails::Controller::UrlRewriting
           include Classmate::Rails::Controller::Redirects
 
-          # Fix cookie permission issue in IE
-          # before_action :normal_cookies_for_ie_in_iframes!
-
           helper_method(:classmate, :classmate_params, :cm_signed_params, :current_classmate_user,
             :params_without_classmate_data, :init_js_params, :cm_canvas?
           )

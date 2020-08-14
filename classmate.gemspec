@@ -42,17 +42,4 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.3"
   s.summary = "Odnoklassniki integration for Rack & Rails application"
-
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<ie_iframe_cookies>, ["~> 0.1.2"])
-    else
-      s.add_dependency(%q<ie_iframe_cookies>, ["~> 0.1.2"])
-    end
-  else
-    s.add_dependency(%q<ie_iframe_cookies>, ["~> 0.1.2"])
-  end
 end
-
