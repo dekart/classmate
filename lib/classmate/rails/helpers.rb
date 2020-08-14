@@ -9,4 +9,3 @@ module Classmate
     end
   end
 end
-
