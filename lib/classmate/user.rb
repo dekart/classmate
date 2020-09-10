@@ -16,7 +16,9 @@ module Classmate
       end
 
       def decrypt(config, encrypted_params)
-        encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{config.secret_key}"[0..31])
+        key = Digest::MD5.hexdigest("secret_key_#{config.secret_key}")
+
+        encryptor = ActiveSupport::MessageEncryptor.new(key)
 
         encryptor.decrypt_and_verify(encrypted_params)
       rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature
