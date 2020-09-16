@@ -1,7 +1,7 @@
 module Classmate
   class Engine < ::Rails::Engine
     initializer "classmate.middleware" do |app|
-      app.middleware.use(Classmate::Middleware)
+      app.middleware.insert_before(Rack::Head, Classmate::Middleware)
     end
 
     initializer "classmate.controller_extension" do
