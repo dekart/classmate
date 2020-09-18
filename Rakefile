@@ -22,7 +22,7 @@ begin
     gem.email = "ahmadeeva.su@gmail.com"
     gem.homepage = "http://github.com/ahmadeeva-su/classmate"
     gem.authors = ["Svetlana Akhmadeeva"]
-    gem.version = '0.5'
+    gem.version = '1.0'
   end
 
   Jeweler::GemcutterTasks.new
