@@ -16,8 +16,10 @@ module Classmate
       end
 
       def decrypt(config, encrypted_params)
-        encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{config.secret_key}")
-          
+        key = Digest::MD5.hexdigest("secret_key_#{config.secret_key}")
+
+        encryptor = ActiveSupport::MessageEncryptor.new(key)
+
         encryptor.decrypt_and_verify(encrypted_params)
       rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature
         ::Rails.logger.error "\nError while decoding classmate params: \"#{ encrypted_params }\""
@@ -26,8 +28,8 @@ module Classmate
       end
 
       def signature_valid?(config, params)
-        param_string = params.except('sig').sort.map{|key, value| "#{key}=#{value}"}.join
-          
+        param_string = params.except('sig').permit!.to_hash.sort.map{|key, value| "#{key}=#{value}"}.join
+
         params['sig'] == Digest::MD5.hexdigest(param_string + config.secret_key)
       end
     end

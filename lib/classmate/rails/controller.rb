@@ -11,9 +11,6 @@ module Classmate
           include Classmate::Rails::Controller::UrlRewriting
           include Classmate::Rails::Controller::Redirects
 
-          # Fix cookie permission issue in IE
-          before_filter :normal_cookies_for_ie_in_iframes!
-
           helper_method(:classmate, :classmate_params, :cm_signed_params, :current_classmate_user,
             :params_without_classmate_data, :init_js_params, :cm_canvas?
           )
@@ -42,7 +39,7 @@ module Classmate
 
       # A hash of params passed to this action, excluding secure information passed by Moymir
       def params_without_classmate_data
-        params.except(*(CLASSMATE_PARAM_NAMES + DEBUG_PARAMS))
+        params.clone.permit!.except(*(CLASSMATE_PARAM_NAMES + DEBUG_PARAMS))
       end
 
       # params coming directly from Odnoklassniki
@@ -62,7 +59,7 @@ module Classmate
       # FIXME params to initialize JS API - might be better to store in cookies
       def init_js_params
         if classmate_params['session_key'].present?
-          classmate_params.slice('api_server', 'apiconnection')
+          classmate_params.clone.permit!.to_hash.slice('api_server', 'apiconnection')
         else
           decrypt(cm_signed_params).try(:slice, 'api_server', 'apiconnection')
         end
@@ -80,16 +77,20 @@ module Classmate
         end
 
         def encrypt(params)
-          encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}")
-          
+          key = Digest::MD5.hexdigest("secret_key_#{classmate.secret_key}")
+
+          encryptor = ActiveSupport::MessageEncryptor.new(key)
+
           encryptor.encrypt_and_sign(params)
         end
 
         def decrypt(encrypted_params)
-          encryptor = ActiveSupport::MessageEncryptor.new("secret_key_#{classmate.secret_key}")
-          
+          key = Digest::MD5.hexdigest("secret_key_#{classmate.secret_key}")
+
+          encryptor = ActiveSupport::MessageEncryptor.new(key)
+
           encryptor.decrypt_and_verify(encrypted_params)
-        rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature 
+        rescue ActiveSupport::MessageEncryptor::InvalidMessage, ActiveSupport::MessageVerifier::InvalidSignature
           nil
         end
     end
